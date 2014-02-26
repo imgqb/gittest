@@ -8,8 +8,8 @@ var getQuestion = function (questionID) {
     console.time('running time');
 
     var option = {
-        host: 'www.zhihu.com',
-        path: '/question/' + questionID,
+        host   : 'www.zhihu.com',
+        path   : '/question/' + questionID,
         headers: {
             Cookie: mycookie
         }
@@ -75,8 +75,8 @@ var getAgree = function () {
     var self = this;
     // 取得赞同者
     var option = {
-        host: 'www.zhihu.com',
-        path: '/node/AnswerFullVoteInfoV2?params=%7B%22answer_id%22%3A%22' + self.ID + '%22%7D',
+        host   : 'www.zhihu.com',
+        path   : '/node/AnswerFullVoteInfoV2?params=%7B%22answer_id%22%3A%22' + self.ID + '%22%7D',
         headers: {
             Cookie: mycookie
         }
@@ -95,8 +95,9 @@ var getAgree = function () {
                 Counter--;
                 return;
             }
-            if (!!noname)
+            if (!!noname) {
                 self.Anonymous = noname.length;
+            }
 
             self.reqCount = arr.length;
             for (var i = 0, l = arr.length; i < l; i++) {
@@ -111,8 +112,8 @@ var getGender = function (name) {
     var self = this;
     // 取得赞同者性别
     var option = {
-        host: 'www.zhihu.com',
-        path: '/node/MemberProfileCardV2?params=%7B%22url_token%22%3A%22' + name + '%22%7D',
+        host   : 'www.zhihu.com',
+        path   : '/node/MemberProfileCardV2?params=%7B%22url_token%22%3A%22' + name + '%22%7D',
         headers: {
             Cookie: mycookie
         }
@@ -138,7 +139,7 @@ var getGender = function (name) {
                 self.FemalPercent = (self.Female / (self.Male + self.Female + self.Anonymous)).toFixed(3);
 
                 result.push(self);
-                if(Counter == 0){
+                if (Counter == 0) {
                     //TODO
                     console.timeEnd('running time');
                 }
