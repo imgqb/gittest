@@ -1,4 +1,4 @@
-var mycookie = '';
+var mycookie = 'your cookie';
 
 // getQuestion >> getAgree >> getGender;
 var http = require('http');
