@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>zhihu</title>
+    <style>
+        .answer {
+            position: relative;
+            width: 150px;
+            height: 200px;
+            border: 1px solid #000;
+            border-top: none;
+            border-right: none;
+            margin-left: 100px;
+        }
+        .answer .male,
+        .answer .female{
+            position: absolute;
+            bottom: 0;
+            width: 30px;
+            height: 0;
+            background-color: #555;
+            -webkit-transition: height .5s ease-in;
+        }
+        .answer .male {left: 30px;}
+        .answer .female {left: 80px;}
+        .answer .male span,
+        .answer .female span {
+            position: absolute;
+            bottom: -20px;
+        }
+        .answer p{
+            position: absolute;
+            left: -100px;
+        }
+    </style>
+</head>
+<body>
+    <input id="ctn" type="text"/> <button id="submit">提交</button>
+    <div class="answer">
+        <p>author:abc <br/>score:123 <br/>percent:0.00</p>
+        <div class="male"><span>male</span></div>
+        <div class="female"><span>female</span></div>
+    </div>
+<script>
+    document.getElementById('submit').addEventListener('click', function(){
+        var val = document.getElementById('ctn').value;
+        if (!isNaN(val)){
+            ajax(val-0);
+        }
+    });
+    function ajax(val){
+        var url = 'http://localhost:3000/hello';
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                console.log(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open('POST', url);
+        xmlhttp.setRequestHeader("Content-type","application/json");
+        xmlhttp.send(JSON.stringify({ID:val}));
+    }
+
+</script>
+</body>
+</html>
