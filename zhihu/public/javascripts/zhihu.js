@@ -6,7 +6,6 @@ var result; // array
 var callback; // fun
 var Counter; // num
 var getQuestion = function (questionID) {
-    console.time('running time');
     var option = {
         host   : 'www.zhihu.com',
         path   : '/question/' + questionID,
@@ -57,7 +56,7 @@ var getScore = function (str) {
     return str.match(/data-score="\d*\.\d*"/)[0].replace(/data-score="|"/g, '') - 0;
 };
 
-var CreateSingleStat = function (answerID, answerAuthor, answerScore, callback) {
+var CreateSingleStat = function (answerID, answerAuthor, answerScore) {
     // 单个回答对象
     this.ID = answerID;
     this.Male = 0;
@@ -66,6 +65,18 @@ var CreateSingleStat = function (answerID, answerAuthor, answerScore, callback) 
     this.Anonymous = 0;
     this.Author = answerAuthor;
     this.Score = answerScore;
+    this.getAgree = getAgree;
+    this.getGender = getGender;
+    this.getAgree();
+};
+
+var CreateSingleStat2 = function (answerID) {
+    // 单个回答对象
+    this.ID = answerID;
+    this.Male = 0;
+    this.Female = 0;
+    this.reqCount = 0;
+    this.Anonymous = 0;
     this.getAgree = getAgree;
     this.getGender = getGender;
     this.getAgree();
@@ -92,7 +103,7 @@ var getAgree = function () {
             var noname = data.match(/匿名用户|知乎用户/g);
             if (!data || !arr) {
                 //没有人赞同的回答
-                Counter--;
+                Counter--; //如果是直接爬回答，那么该回答不会是个没人赞同的回答
 //                result.push(self);
                 return;
             }
@@ -134,12 +145,17 @@ var getGender = function (name) {
             }
             if (self.reqCount === 0) {
                 Counter--;
-                delete self.reqCount;
-                delete self.getAgree;
-                delete self.getGender;
+//                delete self.reqCount;
+//                delete self.getAgree;
+//                delete self.getGender;
                 self.FemalPercent = (self.Female / (self.Male + self.Female + self.Anonymous)).toFixed(3);
-
-                result.push(self);
+                result.push({
+                    ID: self.ID,
+                    Male: self.Male,
+                    Female: self.Female,
+                    Anonymous: self.Anonymous,
+                    FemalPercent: self.FemalPercent
+                });
                 if (Counter == 0) {
                     callback(result);
                     console.timeEnd('running time');
@@ -150,9 +166,18 @@ var getGender = function (name) {
     req.end();
 };
 
-module.exports = function(){
+exports.countQuestion = function(){
+    console.time('running time');
     result = [];
     Counter = 0;
     getQuestion(arguments[0]);
+    callback = arguments[1];
+};
+
+exports.countSingleAnswer = function(){
+    console.time('running time');
+    result = [];
+    Counter = 1;
+    CreateSingleStat2(arguments[0]);
     callback = arguments[1];
 };
